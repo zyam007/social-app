@@ -18,14 +18,16 @@ export default function () {
 
   //real time listener
   useEffect(() => {
-    db.collection('posts').onSnapshot((snapshot) => {
-      setPosts(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data(),
-        }))
-      );
-    });
+    db.collection('posts')
+      .orderBy('timestamp', 'desc')
+      .onSnapshot((snapshot) => {
+        setPosts(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            data: doc.data(),
+          }))
+        );
+      });
   }, []);
 
   const sendPost = (e) => {
@@ -38,6 +40,7 @@ export default function () {
         'https://images.unsplash.com/photo-1530041686259-53d26f863313?ixid=MXwxMjA3fDB8MHxzZWFyY2h8M3x8cHVnfGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60',
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
+    setInput('');
   };
 
   return (
